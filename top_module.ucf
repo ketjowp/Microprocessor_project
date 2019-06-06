@@ -1,0 +1,47 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "clk" LOC = C9;
+NET "reset" LOC = N17;
+NET "lcd_e" LOC = M18;
+NET "lcd_rs" LOC = L18;
+NET "lcd_rw" LOC = L17;
+NET "lcd_db[7]" LOC = M15;
+NET "lcd_db[6]" LOC = P17;
+NET "lcd_db[5]" LOC = R16;
+NET "lcd_db[4]" LOC = R15;
+
+
+
+# PlanAhead Generated IO constraints 
+
+NET "clk" IOSTANDARD = LVTTL;
+NET "reset" IOSTANDARD = LVTTL;
+NET "reset" PULLUP;
+NET "data_out_proc[7]" IOSTANDARD = LVTTL;
+NET "data_out_proc[6]" IOSTANDARD = LVTTL;
+NET "data_out_proc[5]" IOSTANDARD = LVTTL;
+NET "data_out_proc[4]" IOSTANDARD = LVTTL;
+NET "data_out_proc[3]" IOSTANDARD = LVTTL;
+NET "data_out_proc[2]" IOSTANDARD = LVTTL;
+NET "data_out_proc[1]" IOSTANDARD = LVTTL;
+NET "data_out_proc[0]" IOSTANDARD = LVTTL;
+NET "lcd_db[7]" IOSTANDARD = LVTTL;
+NET "lcd_db[6]" IOSTANDARD = LVTTL;
+NET "lcd_db[5]" IOSTANDARD = LVTTL;
+NET "lcd_db[4]" IOSTANDARD = LVTTL;
+NET "lcd_e" IOSTANDARD = LVTTL;
+NET "lcd_rs" IOSTANDARD = LVTTL;
+NET "lcd_rw" IOSTANDARD = LVTTL;
+
+
+# PlanAhead Generated physical constraints 
+
+NET "data_out_proc[7]" LOC = F9;
+NET "data_out_proc[6]" LOC = E9;
+NET "data_out_proc[5]" LOC = D11;
+NET "data_out_proc[4]" LOC = C11;
+NET "data_out_proc[3]" LOC = F11;
+NET "data_out_proc[2]" LOC = E11;
+NET "data_out_proc[1]" LOC = E12;
+NET "data_out_proc[0]" LOC = F12;

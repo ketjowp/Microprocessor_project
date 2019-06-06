@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="D:/Folderyzpulpitu/Programowanie/VHDL/PUL_projekt/third_tb_isim_beh.wdb" id="1" type="auto">
+         <top_modules>
+            <top_module name="numeric_std" />
+            <top_module name="std_logic_1164" />
+            <top_module name="std_logic_arith" />
+            <top_module name="std_logic_unsigned" />
+            <top_module name="third_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <WVObjectSize size="6" />
+   <wvobject fp_name="/third_tb/uut/proc/magistrala/t_in_reg" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">t_in_reg[7:0]</obj_property>
+      <obj_property name="ObjectShortName">t_in_reg[7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/third_tb/uut/controler/sterowanie/line1_buffer" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">line1_buffer[127:0]</obj_property>
+      <obj_property name="ObjectShortName">line1_buffer[127:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/third_tb/uut/controler/sterowanie/lcd_e" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">lcd_e</obj_property>
+      <obj_property name="ObjectShortName">lcd_e</obj_property>
+   </wvobject>
+   <wvobject fp_name="/third_tb/uut/controler/sterowanie/lcd_rs" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">lcd_rs</obj_property>
+      <obj_property name="ObjectShortName">lcd_rs</obj_property>
+   </wvobject>
+   <wvobject fp_name="/third_tb/uut/controler/sterowanie/lcd_rw" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">lcd_rw</obj_property>
+      <obj_property name="ObjectShortName">lcd_rw</obj_property>
+   </wvobject>
+   <wvobject fp_name="/third_tb/uut/controler/sterowanie/lcd_db" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lcd_db[7:4]</obj_property>
+      <obj_property name="ObjectShortName">lcd_db[7:4]</obj_property>
+   </wvobject>
+</wave_config>

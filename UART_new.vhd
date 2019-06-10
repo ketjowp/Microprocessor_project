@@ -3,6 +3,8 @@ use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 use IEEE.STD_LOGIC_ARITH.ALL;
 
+-- zakomentowana mo¿liwoœæ odbierania danych przez UART przez procesor
+
 entity UART_new is
 
 port (
@@ -20,33 +22,24 @@ end UART_new;
 architecture UART_a of UART_new is
 
 
---constant r_out_reg_addr : std_logic_vector (7 downto 0) := "11000001";
---constant r_op_cnt_addr : std_logic_vector (7 downto 0) := "11000010";
---constant r_bit_cnt_addr : std_logic_vector (7 downto 0) := "11000011";
---constant t_in_reg_addr : std_logic_vector (7 downto 0) := "10000001";
---constant t_op_cnt_addr : std_logic_vector (7 downto 0) := "10000010";
---constant t_bit_cnt_addr : std_logic_vector (7 downto 0) := "10000011";
---constant n_data_bit_addr : std_logic_vector (7 downto 0) := "10000000";
-
-
-type r_STANY is (r_start_bit, r_wait , recv); -- deklaracja typu wyliczeniowego
+--type r_STANY is (r_start_bit, r_wait , recv); -- deklaracja typu wyliczeniowego
 type t_STANY is (t_start_bit, t_wait, trans, t_stop_bit); -- deklaracja typu wyliczeniowego
 
-signal r_stan, r_stan_nast : r_STANY; -- sygna³y: stan i r_stan_nast typu STANY;
-signal slope : std_logic; --sygna³ gdy pojawia sie bit start
-signal r_bit_cnt : std_logic_vector(3 downto 0); --licznik bitów
-signal r_op_cnt : std_logic_vector(3 downto 0); --licznik impulsów taktuj¹cych odbiornik -> 16clk/bit
-signal bit_line : std_logic; -- linia wewnêtrzna do wpisu bitów do rejestru przesuwnego 
-signal r_op_reg : std_logic_vector(7 downto 0); -- rejestr przesuwny
-signal r_out_reg : std_logic_vector(7 downto 0); --rejestr wyjœciowy do którgo ma dostêp procesor
-signal b8, b9, b10: std_logic; -- rejestry przechowuj¹ce dane z 8,9,10 taktu zegara w bicie
-signal slope_a, slope_b: std_logic; -- rejestry s³u¿ace wykrywaniu zbocza opadaj¹cego dla bitu start
+--signal r_stan, r_stan_nast : r_STANY; -- sygna³y: stan i r_stan_nast typu STANY;
+--signal slope : std_logic; --sygna³ gdy pojawia sie bit start
+--signal r_bit_cnt : std_logic_vector(3 downto 0); --licznik bitów
+--signal r_op_cnt : std_logic_vector(3 downto 0); --licznik impulsów taktuj¹cych odbiornik -> 16clk/bit
+--signal bit_line : std_logic; -- linia wewnêtrzna do wpisu bitów do rejestru przesuwnego 
+--signal r_op_reg : std_logic_vector(7 downto 0); -- rejestr przesuwny
+--signal r_out_reg : std_logic_vector(7 downto 0); --rejestr wyjœciowy do którgo ma dostêp procesor
+--signal b8, b9, b10: std_logic; -- rejestry przechowuj¹ce dane z 8,9,10 taktu zegara w bicie
+--signal slope_a, slope_b: std_logic; -- rejestry s³u¿ace wykrywaniu zbocza opadaj¹cego dla bitu start
 
-signal t_stan, t_stan_nast : t_STANY; -- sygna³y: stan i stan_nast typu STANY;
+signal t_stan, t_stan_nast : t_STANY; 				-- sygna³y: stan i stan_nast typu STANY;
 signal t_bit_cnt : std_logic_vector(3 downto 0); --licznik bitów
 signal t_op_cnt : std_logic_vector(3 downto 0); --licznik impulsów taktuj¹cych odbiornik -> 16clk/bit
 signal t_in_reg : std_logic_vector(7 downto 0); --rejestr wejœciowy do którego wpisywane s¹ dane do wys³ania
-signal new_data : std_logic; --linia, która informuje czy dane na wejsciu s¹ nowymi danymi
+signal new_data : std_logic; 							--linia, która informuje czy dane na wejsciu s¹ nowymi danymi
 signal new_reg_a : std_logic_vector(7 downto 0); --rejestr - stwierdzenie zmiany danych
 signal new_reg_b : std_logic_vector(7 downto 0); --rejestr - stwierdzenie zmiany danych 
 signal n_data_bit : std_logic_vector(3 downto 0); --rejestr - liczba bitów odbieranych / wysy³anych danych  
@@ -83,122 +76,122 @@ end process reg_prog;
 		
 --odbiornik
 
-r_reg:process(clk,reset)
-begin
-	if (reset='1')then
-	r_stan <= r_wait;
-	elsif(clk'event and clk='1') then
-	r_stan <= r_stan_nast;
-	end if;
-end process r_reg;
-
-r_komb:process(slope, r_op_cnt, r_bit_cnt, RX)   --proces kombinacyjny opisuj¹cy przejœcia miêdzy stanami automatu
-begin
-	r_stan_nast<= r_stan; 
-	case r_stan is 		
-		when r_wait =>
-			if (slope='1') then
-			r_stan_nast<= r_start_bit;
-			end if;
-		
-		when r_start_bit =>
-			if bit_line = '0' and r_op_cnt = "1111" then --sprawdzaj czy jest dobra wartoœæ bitu z g³osowania dopiero na koñcu licznika
-			r_stan_nast<= recv;
-			end if;
-			if bit_line = '1' and r_op_cnt = "1111" then   
-			r_stan_nast<= r_wait;
-			end if;
-		
-		when recv =>
-			if r_bit_cnt = n_data_bit then
-			r_stan_nast<= r_wait;
-			end if;
-	end case;
-end process r_komb;
-
-r_bit_counter : process(clk,reset)
-begin
-	if reset = '1' then
-		r_bit_cnt <= "0000";
-	elsif clk'event and clk='1' then
-		if (r_stan = recv AND r_op_cnt ="1111") then --liczy co 16 cykli zegara gdy jest w stanie odbioru
-			r_bit_cnt <= r_bit_cnt + 1;
-		end if;	
-		if r_stan = r_wait then
-		r_bit_cnt <= "0000";
-		end if;
-	end if;
-end process r_bit_counter;
-
-
-op_counter : process(clk,reset)
-begin
-	if reset ='1' then
-		r_op_cnt <= "0000";
-	elsif (clk'event and clk='1') then
-		if (r_stan = recv or r_stan = r_start_bit) then --liczy ci¹gle gdy jest w stanie odbierania lub pojawienia sie bitu start
-			r_op_cnt <= r_op_cnt + 1;
-		end if;
-		if r_stan = r_wait or r_bit_cnt= n_data_bit then
-			r_op_cnt <= "0000";
-		end if;
-	end if;
-end process op_counter;
-
-
-main : process (clk, reset)
-begin
-	if reset = '1' then 
-		b8<='0';
-		b9<='0';
-		b10<='0';
-		r_op_reg<= (others =>'0');
-		r_out_reg<= (others =>'0');
-		r_irq <= '0';
-	elsif clk'event and clk='1' then
-	
-		--tu wykrywanie opdaj¹cego zbocza gdy nie ma odbioru
-		if r_stan = r_wait then
-			slope_a <= RX;
-			slope_b <= slope_a;
-			  -- reszta za procesem... 
-		end if;
-		
-		-- tu przepisywanie do rejestrów z wejœcia w odpowiednich chwilach: OK
-		if r_op_cnt = "1000" then
-			b8 <= RX;
-		end if; 
-		if r_op_cnt = "1001" then
-			b9 <= RX;
-		end if; 
-		if r_op_cnt = "1010" then
-			b10 <= RX;
-		end if; 
-		
-		-- przepisanie bitu z bloku decyzyjnego do rejestru przesuwnego
-		if r_op_cnt = "1111" then 
-		r_op_reg <= r_op_reg(6 downto 0) & bit_line;
-		end if;
-		
-		-- przepisanie do rejestru wyjœiowego i zg³oszenie przerwania
-		if r_bit_cnt = n_data_bit then
-			r_out_reg <= r_op_reg;
-			r_irq <= '1';
-		else 
-			r_irq<='0';
-		end if;
-	end if;
-
-end process main;
-
--- do zbocza opadaj¹cego
-slope <=  (not slope_a) and slope_b; 
-
-
--- blok decyzyjny   ---OK
-bit_line <= '1' when  ( b8='1' and b9='1' and b10='1' ) or ( b8='0' and b9='1' and b10='1' ) or
-		( b8='1' and b9='1' and b10='0' ) or ( b8='1' and b9='0' and b10='1')	else '0';  
-
+--r_reg:process(clk,reset)
+--begin
+--	if (reset='1')then
+--	r_stan <= r_wait;
+--	elsif(clk'event and clk='1') then
+--	r_stan <= r_stan_nast;
+--	end if;
+--end process r_reg;
+--
+--r_komb:process(slope, r_op_cnt, r_bit_cnt, RX)   --proces kombinacyjny opisuj¹cy przejœcia miêdzy stanami automatu
+--begin
+--	r_stan_nast<= r_stan; 
+--	case r_stan is 		
+--		when r_wait =>
+--			if (slope='1') then
+--			r_stan_nast<= r_start_bit;
+--			end if;
+--		
+--		when r_start_bit =>
+--			if bit_line = '0' and r_op_cnt = "1111" then --sprawdzaj czy jest dobra wartoœæ bitu z g³osowania dopiero na koñcu licznika
+--			r_stan_nast<= recv;
+--			end if;
+--			if bit_line = '1' and r_op_cnt = "1111" then   
+--			r_stan_nast<= r_wait;
+--			end if;
+--		
+--		when recv =>
+--			if r_bit_cnt = n_data_bit then
+--			r_stan_nast<= r_wait;
+--			end if;
+--	end case;
+--end process r_komb;
+--
+--r_bit_counter : process(clk,reset)
+--begin
+--	if reset = '1' then
+--		r_bit_cnt <= "0000";
+--	elsif clk'event and clk='1' then
+--		if (r_stan = recv AND r_op_cnt ="1111") then --liczy co 16 cykli zegara gdy jest w stanie odbioru
+--			r_bit_cnt <= r_bit_cnt + 1;
+--		end if;	
+--		if r_stan = r_wait then
+--		r_bit_cnt <= "0000";
+--		end if;
+--	end if;
+--end process r_bit_counter;
+--
+--
+--op_counter : process(clk,reset)
+--begin
+--	if reset ='1' then
+--		r_op_cnt <= "0000";
+--	elsif (clk'event and clk='1') then
+--		if (r_stan = recv or r_stan = r_start_bit) then --liczy ci¹gle gdy jest w stanie odbierania lub pojawienia sie bitu start
+--			r_op_cnt <= r_op_cnt + 1;
+--		end if;
+--		if r_stan = r_wait or r_bit_cnt= n_data_bit then
+--			r_op_cnt <= "0000";
+--		end if;
+--	end if;
+--end process op_counter;
+--
+--
+--main : process (clk, reset)
+--begin
+--	if reset = '1' then 
+--		b8<='0';
+--		b9<='0';
+--		b10<='0';
+--		r_op_reg<= (others =>'0');
+--		r_out_reg<= (others =>'0');
+--		r_irq <= '0';
+--	elsif clk'event and clk='1' then
+--	
+--		--tu wykrywanie opdaj¹cego zbocza gdy nie ma odbioru
+--		if r_stan = r_wait then
+--			slope_a <= RX;
+--			slope_b <= slope_a;
+--			  -- reszta za procesem... 
+--		end if;
+--		
+--		-- tu przepisywanie do rejestrów z wejœcia w odpowiednich chwilach: OK
+--		if r_op_cnt = "1000" then
+--			b8 <= RX;
+--		end if; 
+--		if r_op_cnt = "1001" then
+--			b9 <= RX;
+--		end if; 
+--		if r_op_cnt = "1010" then
+--			b10 <= RX;
+--		end if; 
+--		
+--		-- przepisanie bitu z bloku decyzyjnego do rejestru przesuwnego
+--		if r_op_cnt = "1111" then 
+--		r_op_reg <= r_op_reg(6 downto 0) & bit_line;
+--		end if;
+--		
+--		-- przepisanie do rejestru wyjœiowego i zg³oszenie przerwania
+--		if r_bit_cnt = n_data_bit then
+--			r_out_reg <= r_op_reg;
+--			r_irq <= '1';
+--		else 
+--			r_irq<='0';
+--		end if;
+--	end if;
+--
+--end process main;
+--
+---- do zbocza opadaj¹cego
+--slope <=  (not slope_a) and slope_b; 
+--
+--
+---- blok decyzyjny   ---OK
+--bit_line <= '1' when  ( b8='1' and b9='1' and b10='1' ) or ( b8='0' and b9='1' and b10='1' ) or
+--		( b8='1' and b9='1' and b10='0' ) or ( b8='1' and b9='0' and b10='1')	else '0';  
+--
 
 
 --nadajnik
@@ -282,6 +275,7 @@ begin
 		--przepisanie z we do wejsciowego rejestru gdy procesor mo¿e zapisywaæ i gdy wystawi³ odpowiedni adres i nie trwa transmisja
 		if (t_stan = t_wait) then --odjête address = t_in_reg_addr and nr_w ='1' and 
 			t_in_reg <= data_in;
+			t_irq<='0'; --UWAGA - czas trwania jeden okres
 		end if;
 		
 		--wpisanie do rejestrów do porównania czy s¹ nowe dane
@@ -289,9 +283,9 @@ begin
 		new_reg_b <=new_reg_a;
 				
 		--wysy³anie danych na wyjscie szeregowe w czasie trans
-		if (t_stan=trans and t_op_cnt ="1111" and t_in_reg/=x"00") then --UWAGA dodany trzeci warunek, ¿eby da³o siê testowaæ. PóŸniejsze rozwi¹zanie - implementacja przerwañ
+		if (t_stan=trans and t_op_cnt ="1111") then-- and t_in_reg/=x"00") then --UWAGA dodany trzeci warunek, ¿eby da³o siê testowaæ. PóŸniejsze rozwi¹zanie - implementacja przerwañ
 			TX<= t_in_reg(7);
-			t_in_reg<= t_in_reg(6 downto 0) & '1';
+			t_in_reg<= t_in_reg(6 downto 0) & '0'; -- tutaj zmiana, niech wchodz¹ zera
 		end if;
 		
 		if (t_stan = t_stop_bit and t_op_cnt ="1111") or t_stan = t_wait  then

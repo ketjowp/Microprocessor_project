@@ -6,7 +6,7 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
 entity licznik is
-	generic (liczba_znakow: std_logic_vector(3 downto 0) :="0110");
+	generic (liczba_znakow: std_logic_vector(3 downto 0) :="0111");
     Port ( clk : in  STD_LOGIC;
            irq : in  STD_LOGIC;
 			  reset : in STD_LOGIC;
@@ -18,13 +18,13 @@ architecture sign_counter_arch of licznik is
 signal zliczanie : std_logic_vector(3 downto 0);
 begin
 
-liczenie: process(clk)
+liczenie: process(clk,reset)
 begin
 	if reset='1' then
 			en<='0';
 			zliczanie<="0000";
 	else
-		if(rising_edge(clk) and irq='1'and irq'stable(15 ns)) then
+		if(rising_edge(clk) and irq='1') then --and irq'stable(15 ns)) then
 		zliczanie<=zliczanie+"01";
 		end if;
 	

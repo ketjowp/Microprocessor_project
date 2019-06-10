@@ -1,5 +1,5 @@
 --Wojciech Porêbiñski
---Modu³ nadrzêdny
+--Modu³ nadrzêdny - po³¹czenie Mikroprocesora z uk³adem sterowania LCD za pomoc¹ UART
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

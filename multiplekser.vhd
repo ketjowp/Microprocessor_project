@@ -17,7 +17,7 @@ end multiplekser;
 architecture multi_arch of multiplekser is
 
 begin
-	multi: process(control)
+	multi: process(a,b,control)
 	begin 
 		if(control='1') then
 			multi_out<=a;

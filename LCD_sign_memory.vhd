@@ -31,10 +31,12 @@ begin
 		end if;
 	end process;
 	
-	reading: process(RAM_r_en)
+	reading: process(RAM_clk)
 		begin
-		if RAM_r_en='1' then
-			RAM_dataout<=RAM(0)&RAM(1)&RAM(2)&RAM(3)&RAM(4)&RAM(5)&RAM(6)&RAM(7)&RAM(8)&RAM(9)&RAM(10)&RAM(11)&RAM(12)&RAM(13)&RAM(14)&RAM(15);
+		if rising_edge(RAM_clk) then
+			if RAM_r_en='1' then
+				RAM_dataout<=RAM(0)&RAM(1)&RAM(2)&RAM(3)&RAM(4)&RAM(5)&RAM(6)&RAM(7)&RAM(8)&RAM(9)&RAM(10)&RAM(11)&RAM(12)&RAM(13)&RAM(14)&RAM(15);
+			end if;
 		end if;
 	end process;
 

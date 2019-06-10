@@ -1,5 +1,5 @@
 --Wojciech Porêbiñski
---ca³y mikrokontroler - komunikacja z wyœwietlaczem LCD
+--komunikacja z wyœwietlaczem LCD - zestawienie komponentów
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -18,21 +18,10 @@ end LCD_control;
 
 architecture LCD_arch of LCD_control is
 
---component top_module is
-    --Port ( data_in : in  STD_LOGIC_VECTOR (7 downto 0);
-           --data_out : out  STD_LOGIC_VECTOR (7 downto 0);
-			  --data_out_proc: out STD_LOGIC_VECTOR(7 downto 0);
-			  --r_irq: out std_logic;
-           --reset : in  STD_LOGIC;
-           --clk : in  STD_LOGIC);
---end component top_module;
-
 component UART_periph is
 port (
-	--data_in: in std_logic_vector(7 downto 0); -- wejscie danych do peryferium z procesora
 	data_out: out std_logic_vector(7 downto 0);
 	r_irq :out std_logic; -- odebrany bajt
-	--t_irq :out std_logic;	-- wys³any bajt
 	clk :in std_logic;
 	reset :in std_logic;
 	TX : out std_logic;
@@ -41,7 +30,7 @@ port (
 end component UART_periph;
 
 component licznik is
-	generic(liczba_znakow: std_logic_vector(3 downto 0) :="0110");
+	generic(liczba_znakow: std_logic_vector(3 downto 0) :="0111");
     Port ( clk : in  STD_LOGIC;
            irq : in  STD_LOGIC;
 			  reset: in STD_LOGIC;

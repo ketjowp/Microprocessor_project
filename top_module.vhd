@@ -35,7 +35,8 @@ component LCD_control is
 				lcd_rw : OUT  std_logic;
 				lcd_db : OUT  std_logic_vector(7 downto 4);
 				reset: in std_logic;
-				clk: in std_logic
+				clk: in std_logic;
+				data_out: out std_logic_vector(7 downto 0)
 	 );
 end component LCD_control;
 
@@ -44,9 +45,8 @@ signal proc_in: std_logic;
 
 begin
 
-proc:Microprocessor port map(clk=>clk,reset=>reset,TX=>proc_out, RX=>proc_in, data_out=>data_out_proc,data_in=>data_in);
-controler:LCD_control port map(clk=>clk,reset=>reset,RX=>proc_out,TX=>proc_in, lcd_e=>lcd_e,lcd_rs=>lcd_rs,lcd_rw=>lcd_rw,lcd_db=>lcd_db);
-
+proc:Microprocessor port map(clk=>clk,reset=>reset,TX=>proc_out, RX=>proc_in, data_in=>data_in, data_out=>data_out_proc);
+controler:LCD_control port map(clk=>clk,reset=>reset,RX=>proc_out,TX=>proc_in, lcd_e=>lcd_e,lcd_rs=>lcd_rs,lcd_rw=>lcd_rw,lcd_db=>lcd_db);--,data_out=>data_out_proc);
 
 end top_arch;
 

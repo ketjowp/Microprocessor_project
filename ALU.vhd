@@ -38,6 +38,7 @@ arithm: process (clk, reset)
 				when "0001" => result <= data1;
 				when "0010" => result <= data1+data2;
 				when "0011" => result <= data1-data2;
+				
 				when "0100" => 
 					bufor_multi<=data1*data2;
 					result <= bufor_multi(15 downto 8);
@@ -54,7 +55,7 @@ arithm: process (clk, reset)
 				when "1100" => result <= not data1;
 				when "1101" => result <= (data1 + "01");
 				when "1110" => result <= (data1 - "01");
-				when "1111" => result <= data1;
+				when "1111" => result <= data2;
 				when others => result <=(others =>'0'); 
 			end case;
 			ready <='1';

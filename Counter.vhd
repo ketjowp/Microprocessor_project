@@ -23,6 +23,7 @@ architecture Counter_arch of Counter is
 signal cicle : std_logic_vector(1 downto 0):="00";
 signal instr : STD_LOGIC_VECTOR (6 downto 0):="0000000";
 signal flag : std_logic;
+signal cycle_2: std_logic_vector(1 downto 0);
 
 
 begin
@@ -41,13 +42,17 @@ begin
 		instr<="0000000";
 		ready_jump<='0';
 		flag<='0';
+		cycle_2<="00";
 		
 	elsif rising_edge(clk) then
 		ready_jump<='0';
 		if flag='1' then
-				instr<=stack_out+"01";
-				flag<='0';
-				ready_jump<='1';
+				cycle_2<=cycle_2+"01";
+				if cycle_2="10" then
+					instr<=stack_out+"01";
+					flag<='0';
+					ready_jump<='1';
+				end if;
 		else
 			if activate_jump='1' then
 				instr<=jump;
@@ -55,6 +60,7 @@ begin
 			elsif stack_jump='1' then --stos
 				instr<=jump;
 				flag<='1';
+				cycle_2<="00";
 				ready_jump<='1';
 			elsif cicle="11" then --and instr/="1111111" then - ¿eby siê nie przekrêca³o i wykonywa³o instrukcji w kó³ko
 				instr<=instr+"01";

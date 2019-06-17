@@ -1,0 +1,24 @@
+
+# PlanAhead Generated IO constraints 
+
+NET "lcd_db[7]" IOSTANDARD = LVTTL;
+NET "lcd_db[6]" IOSTANDARD = LVTTL;
+NET "lcd_db[5]" IOSTANDARD = LVTTL;
+NET "lcd_db[4]" IOSTANDARD = LVTTL;
+NET "clk" IOSTANDARD = LVTTL;
+NET "lcd_e" IOSTANDARD = LVTTL;
+NET "lcd_rs" IOSTANDARD = LVTTL;
+NET "lcd_rw" IOSTANDARD = LVTTL;
+NET "reset" IOSTANDARD = LVTTL;
+
+# PlanAhead Generated physical constraints 
+
+NET "lcd_db[7]" LOC = M15;
+NET "lcd_db[6]" LOC = P17;
+NET "lcd_db[5]" LOC = R16;
+NET "lcd_db[4]" LOC = R15;
+NET "clk" LOC = C9;
+NET "lcd_e" LOC = M18;
+NET "lcd_rs" LOC = L18;
+NET "lcd_rw" LOC = L17;
+NET "reset" LOC = N17;

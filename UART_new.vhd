@@ -281,6 +281,7 @@ begin
 		--wpisanie do rejestrów do porównania czy s¹ nowe dane
 		new_reg_a <= t_in_reg;
 		new_reg_b <=new_reg_a;
+		
 				
 		--wysy³anie danych na wyjscie szeregowe w czasie trans
 		if (t_stan=trans and t_op_cnt ="1111") then-- and t_in_reg/=x"00") then --UWAGA dodany trzeci warunek, ¿eby da³o siê testowaæ. PóŸniejsze rozwi¹zanie - implementacja przerwañ

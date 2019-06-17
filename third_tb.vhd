@@ -77,7 +77,10 @@ BEGIN
 		reset<='1';
 		wait for clk_period*10;
 		reset<='0';
-      wait for clk_period*10000;
+      wait for clk_period*400000;
+		reset<='1';
+		wait for clk_period*10;
+		reset<='0';
 
       -- insert stimulus here 
 

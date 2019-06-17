@@ -24,15 +24,17 @@ begin
 			en<='0';
 			zliczanie<="0000";
 	else
-		if(rising_edge(clk) and irq='1') then --and irq'stable(15 ns)) then
-		zliczanie<=zliczanie+"01";
-		end if;
+		if(rising_edge(clk)) then
+			if (irq='1') then
+				zliczanie<=zliczanie+"01";
+			end if;
 	
-		if zliczanie=liczba_znakow then
-			en<='1';
-			zliczanie<="0000";
-		else
-			en<='0';
+			if zliczanie=liczba_znakow then
+				en<='1';
+				zliczanie<="0000";
+			else
+				en<='0';
+			end if;
 		end if;
 	end if;
 end process;

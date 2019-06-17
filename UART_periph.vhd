@@ -156,7 +156,7 @@ begin
 		-- przepisanie do rejestru wyjœiowego i zg³oszenie przerwania
 		if r_bit_cnt = n_data_bit then
 			r_out_reg <= r_op_reg;
-			--r_irq <= '1'; to by³o i dzia³a³o dwa przebiegi
+			--r_irq <= '1'; --to by³o i dzia³a³o dwa przebiegi
 		--else 
 			--r_irq<='0';
 		end if;
@@ -178,7 +178,7 @@ end process main;
 slope <=  (not slope_a) and slope_b; 
 
 
--- blok decyzyjny   ---OK
+--co zapisaæ (8,9,10 bit decyduj¹)
 bit_line <= '1' when  ( b8='1' and b9='1' and b10='1' ) or ( b8='0' and b9='1' and b10='1' ) or
 		( b8='1' and b9='1' and b10='0' ) or ( b8='1' and b9='0' and b10='1')	else '0';  
 

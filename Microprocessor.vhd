@@ -180,15 +180,15 @@ begin
 --mo¿liwe - t_irq trwa ca³y czas w stanie t_wait
 
 ALU_comp : ALU port map(data1=>data_1,data2=>data_2, arit_instruction=>ALU_instruction, clk=>clk, reset=>reset, result=>result, ready=>ALU_done, activate=> activ);
-Decoder_comp : decoder port map(full_instruction => instruction, addr_reg_1=>instr_addr_1, addr_reg_2=>instr_addr_2, short_instruction=>ALU_instruction, clk=>clk, reset=>reset, activ_ALU=> activ, jump=>jump, activ_jump=>activ_jump, done=>done,control=>control, w_en=>w_en, trans_en=>dec_trans_en, stack_jump=>active_stack); --stos
+Decoder_comp : decoder port map(full_instruction => instruction, addr_reg_1=>instr_addr_1, addr_reg_2=>instr_addr_2, short_instruction=>ALU_instruction, clk=>clk, reset=>reset, activ_ALU=> activ, jump=>jump, activ_jump=>activ_jump, done=>done,control=>control, w_en=>w_en, stack_jump=>active_stack); --trans_en=>dec_trans_en, stack_jump=>active_stack); --stos
 Data : data_reg port map(RAM_datain=>RAM_datain, RAM_addr_1=>instr_addr_1, RAM_addr_2=>instr_addr_2, RAM_w_en=>done, RAM_dataout_1=>data_1, RAM_dataout_2=>data_2, ram_clk=>clk,reset=>reset);
 Instruction_Set : instr_reg port map(new_instruction=>instruction,ROM_addr=>select_instruction, clk=>clk);
 Multi1 : multiplekser port map(a=>result, b=>data_in, control=>control, multi_out=>RAM_datain);
 Instruction_Counter : Counter port map(clk=>clk, reset=>reset, instruction_no=> select_instruction, jump=>jump, ready_jump=>jump_done, activate_jump=>activ_jump, stack_out=>stack_out, stack_jump=>active_stack);--stos
 gate1 : or_gate port map(a=> ALU_done, b=> jump_done, c=> w_en, d => done);
-Acumulator: FIFO_new port map(clk=>clk,reset=>reset,DataIn=>result,DataOut=>UART_tosend,WriteEn=>ALU_done,ReadEn=>trans_en);
+Acumulator: FIFO_new port map(clk=>clk,reset=>reset,DataIn=>result,DataOut=>UART_tosend,WriteEn=>ALU_done,ReadEn=>t_done); -- zmiana
 UART_bus: UART_new port map(clk=>clk, reset=>reset, data_in=>UART_tosend, RX=>RX, TX=>TX,t_irq=>t_done); -- przerwania trzeba dodaæ
-gate2: and_gate port map(a=>t_done,b=>dec_trans_en,c=>trans_en);
+--gate2: and_gate port map(a=>t_done,b=>dec_trans_en,c=>trans_en);
 stos: stack port map(addr_in=>select_instruction,active_stack=>active_stack, addr_out=>stack_out, clk=>clk, reset=> reset); --stos
 data_out<=result;
 end Micro_arch;
